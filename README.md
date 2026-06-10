@@ -105,33 +105,6 @@ src/
     └── types.ts                    # TypeScript types
 ```
 
-## Quick Fix for Vibe Coders
-
-Copy-paste this prompt into Cursor, Bolt, Lovable, or any AI tool to fix the Promise.all demo dashboard fast.
-
-### Fix Promise.all Dashboard
-
-```
-My Promise.all vs Sequential demo dashboard is broken. It's a Next.js 16 + shadcn/ui project with:
-- Dynamic route at /demo/[slug]
-- Sidebar using shadcn sidebar-07 block
-- Tabs: Test and Explanation
-- JSONPlaceholder API with 2s delay
-- Timer showing sequential (8s) vs parallel (2s)
-
-Fix these common issues:
-1. Import errors: all components use @/ alias. Example: import { Button } from "@/components/ui/button"
-2. "use client" required on any component using useState, useEffect, or refs
-3. Sidebar must be inside <SidebarProvider> in layout.tsx, main content inside <SidebarInset>
-4. Tabs use shadcn base-ui pattern: <TabsTrigger value="test"> not asChild prop
-5. Lucide icons: import { Zap } from "lucide-react" - no default export
-6. Widget icons must be LucideIcon type: import type { LucideIcon } from "lucide-react"
-7. Timer uses useRef for setInterval cleanup - check for memory leaks
-8. Tailwind v4: CSS vars use oklch(), no tailwind.config.ts needed
-9. Run npm run build to check for TypeScript errors before npm run dev
-10. If dashboard is blank, check browser console and terminal for the first error
-```
-
 ## License
 
 MIT
