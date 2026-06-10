@@ -119,19 +119,36 @@ const [users, orders, analytics, notifs] = results;
 
 // Total: ~2 seconds (max of all)`
 
-  const fixPrompt = `Fix this Promise.all vs Sequential dashboard demo. It's a Next.js 16 + shadcn/ui project.
+  const fixPrompt = `I have a Next.js dashboard that fetches data from multiple API endpoints. Right now my page loads slowly because each API call waits for the previous one to finish.
 
-Issues to check:
-1. Import paths use @/ alias - Example: import { Button } from "@/components/ui/button"
-2. Every component with useState/useEffect must have "use client" at the top
-3. Sidebar layout: <SidebarProvider> wraps <AppSidebar /> and <SidebarInset> in layout.tsx
-4. Tabs use base-ui pattern from shadcn - no asChild prop on TabsTrigger
-5. Lucide icons: import { Zap } from "lucide-react" (no default export)
-6. WidgetData.icon type is LucideIcon: import type { LucideIcon } from "lucide-react"
-7. Timer uses useRef for setInterval - make sure cleanup in return () => clearInterval()
-8. Tailwind v4: CSS vars use oklch() not hsl(), no tailwind.config.ts needed
-9. Run npm run build first to catch TypeScript errors
-10. If blank screen, check browser console + terminal for the first error`
+Before (slow):
+const users = await fetch("/api/users");
+const orders = await fetch("/api/orders");
+const analytics = await fetch("/api/analytics");
+const notifications = await fetch("/api/notifications");
+// Total time = sum of all requests (8 seconds)
+
+Fix this by using Promise.all to run all API calls in parallel:
+
+After (fast):
+const [usersRes, ordersRes, analyticsRes, notifsRes] = await Promise.all([
+  fetch("/api/users"),
+  fetch("/api/orders"),
+  fetch("/api/analytics"),
+  fetch("/api/notifications"),
+]);
+const users = await usersRes.json();
+const orders = await ordersRes.json();
+const analytics = await analyticsRes.json();
+const notifications = await notifsRes.json();
+// Total time = slowest request only (2 seconds)
+
+Requirements:
+- Only use Promise.all when API calls are independent (no data depends on another)
+- Show a loading state while all requests are in flight
+- Handle errors - if any request fails, show an error state
+- Display a timer so users can see the performance improvement
+- Use "use client" at the top if using React state`
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(fixPrompt)
