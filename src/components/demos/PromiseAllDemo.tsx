@@ -12,7 +12,8 @@ import ConsoleOutput from "@/components/demo/ConsoleOutput"
 import DemoTabs from "@/components/demo/DemoTabs"
 import ExplanationCard from "@/components/demo/ExplanationCard"
 import VisualTimeline from "@/components/demo/VisualTimeline"
-import { Zap, ZapOff, Code2, Users, Package, BarChart3, Bell } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Zap, ZapOff, Code2, Users, Package, BarChart3, Bell, Copy, Check } from "lucide-react"
 
 const initialWidgets: WidgetData[] = [
   { name: "Users", icon: Users, color: "blue", data: [], duration: 0, count: 0, status: "idle" },
@@ -28,6 +29,7 @@ export default function PromiseAllDemo() {
   const [timer, setTimer] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
   const [activeTab, setActiveTab] = useState("test")
+  const [copied, setCopied] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const isCancelledRef = useRef(false)
 
@@ -116,6 +118,26 @@ const results = await Promise.all([
 const [users, orders, analytics, notifs] = results;
 
 // Total: ~2 seconds (max of all)`
+
+  const fixPrompt = `Fix this Promise.all vs Sequential dashboard demo. It's a Next.js 16 + shadcn/ui project.
+
+Issues to check:
+1. Import paths use @/ alias - Example: import { Button } from "@/components/ui/button"
+2. Every component with useState/useEffect must have "use client" at the top
+3. Sidebar layout: <SidebarProvider> wraps <AppSidebar /> and <SidebarInset> in layout.tsx
+4. Tabs use base-ui pattern from shadcn - no asChild prop on TabsTrigger
+5. Lucide icons: import { Zap } from "lucide-react" (no default export)
+6. WidgetData.icon type is LucideIcon: import type { LucideIcon } from "lucide-react"
+7. Timer uses useRef for setInterval - make sure cleanup in return () => clearInterval()
+8. Tailwind v4: CSS vars use oklch() not hsl(), no tailwind.config.ts needed
+9. Run npm run build first to catch TypeScript errors
+10. If blank screen, check browser console + terminal for the first error`
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(fixPrompt)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const timelineData = useMemo(() => {
     const names = ["Users", "Orders", "Analytics", "Notifications"]
@@ -246,6 +268,39 @@ const [users, orders, analytics, notifs] = results;
                 <span className="font-[family-name:var(--font-jetbrains)] text-emerald-600">O(1)</span>.
               </p>
             </div>
+          </div>
+        }
+        promptContent={
+          <div className="space-y-4 stagger-children">
+            <div className="bento-card overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-zinc-200">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-medium">Copy this prompt to fix your dashboard</span>
+                <Button
+                  onClick={handleCopy}
+                  size="sm"
+                  variant={copied ? "default" : "outline"}
+                  className={copied ? "bg-emerald-500 hover:bg-emerald-600 text-white" : "border-zinc-200"}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="size-3.5" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="size-3.5" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
+              <pre className="p-5 font-[family-name:var(--font-jetbrains)] text-[12px] leading-relaxed text-zinc-700 overflow-x-auto whitespace-pre-wrap">
+                {fixPrompt}
+              </pre>
+            </div>
+            <p className="text-[11px] text-zinc-500 text-center">
+              Paste into Cursor, Bolt, Lovable, v0, ChatGPT, or Claude
+            </p>
           </div>
         }
       />

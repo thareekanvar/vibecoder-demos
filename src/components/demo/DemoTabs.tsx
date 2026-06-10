@@ -1,13 +1,14 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FlaskConical, BookOpen } from "lucide-react"
+import { FlaskConical, BookOpen, Wand2 } from "lucide-react"
 
 interface DemoTabsProps {
   value: string
   onValueChange: (value: string) => void
   testContent: React.ReactNode
   explanationContent: React.ReactNode
+  promptContent: React.ReactNode
 }
 
 export default function DemoTabs({
@@ -15,6 +16,7 @@ export default function DemoTabs({
   onValueChange,
   testContent,
   explanationContent,
+  promptContent,
 }: DemoTabsProps) {
   return (
     <Tabs defaultValue="test" value={value} onValueChange={onValueChange}>
@@ -28,10 +30,15 @@ export default function DemoTabs({
             <BookOpen className="size-3.5" />
             Explanation
           </TabsTrigger>
+          <TabsTrigger value="prompt" className="gap-1.5">
+            <Wand2 className="size-3.5" />
+            Prompt
+          </TabsTrigger>
         </TabsList>
       </div>
       <TabsContent value="test">{testContent}</TabsContent>
       <TabsContent value="explanation">{explanationContent}</TabsContent>
+      <TabsContent value="prompt">{promptContent}</TabsContent>
     </Tabs>
   )
 }
