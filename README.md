@@ -107,67 +107,29 @@ src/
 
 ## Quick Fix for Vibe Coders
 
-Copy-paste these prompts into Cursor, Bolt, Lovable, or any AI tool to fix common issues fast.
+Copy-paste this prompt into Cursor, Bolt, Lovable, or any AI tool to fix the Promise.all demo dashboard fast.
 
-### Dashboard not loading / blank screen
-
-```
-Fix my Next.js dashboard that shows a blank screen. Check:
-1. Import paths - make sure all imports use @/ alias correctly
-2. "use client" directive is missing on any component that uses useState/useEffect
-3. The page.tsx is importing the right component
-4. No missing npm packages - run npm install
-5. Check terminal for build errors with npm run build
-```
-
-### Sidebar not showing / broken layout
+### Fix Promise.all Dashboard
 
 ```
-Fix my shadcn sidebar layout. The sidebar is not visible or the main content overlaps it.
-1. Make sure layout.tsx wraps everything in <SidebarProvider>
-2. <AppSidebar /> should be inside SidebarProvider but BEFORE <SidebarInset>
-3. Main page content should be inside <SidebarInset>
-4. Import SidebarProvider, SidebarInset from "@/components/ui/sidebar"
-```
+My Promise.all vs Sequential demo dashboard is broken. It's a Next.js 16 + shadcn/ui project with:
+- Dynamic route at /demo/[slug]
+- Sidebar using shadcn sidebar-07 block
+- Tabs: Test and Explanation
+- JSONPlaceholder API with 2s delay
+- Timer showing sequential (8s) vs parallel (2s)
 
-### Tailwind classes not working / no styles
-
-```
-Fix my Tailwind CSS classes not applying. This is a Next.js 16 + Tailwind v4 project.
-1. Make sure globals.css starts with @import "tailwindcss" (not @tailwind directives)
-2. CSS variables use oklch() format, not hsl()
-3. There is no tailwind.config.ts needed in v4 - config is in globals.css
-4. Run npm run dev to restart the dev server
-```
-
-### TypeScript errors / import errors
-
-```
-Fix TypeScript errors in my Next.js project.
-1. Import React types: import type { ... } from "react"
-2. Use "use client" at top of any file with hooks (useState, useEffect, etc)
-3. For Lucide icons: import { IconName } from "lucide-react"
-4. For shadcn components: import from "@/components/ui/component-name"
-```
-
-### shadcn components not found
-
-```
-Fix "Module not found" for shadcn components.
-1. Run: npx shadcn@latest add button card tabs separator
-2. Components install to src/components/ui/
-3. Import like: import { Button } from "@/components/ui/button"
-4. Do NOT edit files in node_modules/ - edit the ones in src/components/ui/
-```
-
-### Adding a new demo page
-
-```
-Add a new demo to my Next.js app. The app uses dynamic routes at /demo/[slug].
-1. Add demo to src/lib/demos.ts with slug, title, icon
-2. Create src/components/demos/NewDemo.tsx
-3. Register in src/app/demo/[slug]/page.tsx demoComponents map
-4. The sidebar auto-discovers demos from the registry
+Fix these common issues:
+1. Import errors: all components use @/ alias. Example: import { Button } from "@/components/ui/button"
+2. "use client" required on any component using useState, useEffect, or refs
+3. Sidebar must be inside <SidebarProvider> in layout.tsx, main content inside <SidebarInset>
+4. Tabs use shadcn base-ui pattern: <TabsTrigger value="test"> not asChild prop
+5. Lucide icons: import { Zap } from "lucide-react" - no default export
+6. Widget icons must be LucideIcon type: import type { LucideIcon } from "lucide-react"
+7. Timer uses useRef for setInterval cleanup - check for memory leaks
+8. Tailwind v4: CSS vars use oklch(), no tailwind.config.ts needed
+9. Run npm run build to check for TypeScript errors before npm run dev
+10. If dashboard is blank, check browser console and terminal for the first error
 ```
 
 ## License
