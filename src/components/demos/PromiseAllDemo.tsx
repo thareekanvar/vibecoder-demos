@@ -317,9 +317,6 @@ Only use Promise.all when the API calls are independent - meaning no call needs 
         }
       />
 
-      <footer className="text-center text-[11px] text-zinc-500 py-8 mt-4">
-        JSONPlaceholder API &middot; 2s artificial delay &middot; Next.js + shadcn/ui + Inter
-      </footer>
     </DemoPageLayout>
   )
 }
