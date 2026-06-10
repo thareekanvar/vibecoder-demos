@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vibecoder Demos
+
+Interactive coding demos for the [vibewiththareek](https://www.youtube.com/@thareekanvar) YouTube channel. Each demo explains a JavaScript/React concept with a live test and a detailed explanation.
+
+## Demos
+
+| Demo | What it covers |
+|------|---------------|
+| [Promise.all vs Sequential](/demo/promise-all) | Parallel vs sequential API fetching — why `Promise.all` is 4x faster |
+
+## Tech Stack
+
+- **Next.js 16** (Turbopack)
+- **TypeScript**
+- **Tailwind CSS v4**
+- **shadcn/ui** (sidebar-07 block)
+- **Lucide Icons**
+- **JSONPlaceholder API** (with 2s artificial delay)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone https://github.com/YOUR_USERNAME/vibecoder-demos.git
+cd vibecoder-demos
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Adding a New Demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Add demo metadata to `src/lib/demos.ts`:
 
-## Learn More
+```ts
+{
+  slug: "my-new-demo",
+  title: "My New Demo",
+  description: "What this demo teaches",
+  icon: Zap,
+  keywords: ["topic1", "topic2"],
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Create the demo component in `src/components/demos/MyNewDemo.tsx`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```tsx
+"use client"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+import DemoPageLayout from "@/components/demo/DemoPageLayout"
+import HeroTimerCard from "@/components/demo/HeroTimerCard"
+import DemoTabs from "@/components/demo/DemoTabs"
+import ExplanationCard from "@/components/demo/ExplanationCard"
 
-## Deploy on Vercel
+export default function MyNewDemo() {
+  // demo logic here
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  return (
+    <DemoPageLayout icon={Zap} title="My Demo" subtitle="Description">
+      <DemoTabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        testContent={<>{/* live test */}</>}
+        explanationContent={<>{/* explanation */}</>}
+      />
+    </DemoPageLayout>
+  )
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Register the component in `src/app/demo/[slug]/page.tsx`:
+
+```ts
+import MyNewDemo from "@/components/demos/MyNewDemo"
+
+const demoComponents = {
+  "promise-all": PromiseAllDemo,
+  "my-new-demo": MyNewDemo,
+}
+```
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx                    # Redirects to first demo
+│   └── demo/[slug]/page.tsx        # Dynamic demo route
+├── components/
+│   ├── demo/                       # Reusable demo components
+│   │   ├── DemoPageLayout.tsx      # Header + sidebar + main wrapper
+│   │   ├── HeroTimerCard.tsx       # Timer + controls
+│   │   ├── ConsoleOutput.tsx       # Live loading logs
+│   │   ├── DemoTabs.tsx            # Test / Explanation tabs
+│   │   ├── ExplanationCard.tsx     # Code + info cards
+│   │   └── VisualTimeline.tsx      # Bar chart timeline
+│   ├── demos/                      # Individual demos
+│   │   └── PromiseAllDemo.tsx
+│   ├── ui/                         # shadcn components
+│   ├── app-sidebar.tsx             # Sidebar with demo list
+│   └── nav-user.tsx                # YouTube channel link
+└── lib/
+    ├── demos.ts                    # Demo registry
+    ├── api.ts                      # API fetchers
+    └── types.ts                    # TypeScript types
+```
+
+## License
+
+MIT
