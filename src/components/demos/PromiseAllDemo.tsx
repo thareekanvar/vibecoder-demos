@@ -119,36 +119,31 @@ const [users, orders, analytics, notifs] = results;
 
 // Total: ~2 seconds (max of all)`
 
-  const fixPrompt = `I have a Next.js dashboard that fetches data from multiple API endpoints. Right now my page loads slowly because each API call waits for the previous one to finish.
+  const fixPrompt = `My dashboard page loads slowly. I have multiple API calls on the same page and they seem to run one after another instead of at the same time.
+
+Check my code for this issue:
+- Look for multiple "await fetch()" calls in a row
+- Each request waits for the previous one to finish
+- Total load time = sum of all request times
+
+If found, fix it by running all independent API calls in parallel using Promise.all:
 
 Before (slow):
-const users = await fetch("/api/users");
-const orders = await fetch("/api/orders");
-const analytics = await fetch("/api/analytics");
-const notifications = await fetch("/api/notifications");
-// Total time = sum of all requests (8 seconds)
-
-Fix this by using Promise.all to run all API calls in parallel:
+const data1 = await fetch("/api/endpoint1");
+const data2 = await fetch("/api/endpoint2");
+const data3 = await fetch("/api/endpoint3");
 
 After (fast):
-const [usersRes, ordersRes, analyticsRes, notifsRes] = await Promise.all([
-  fetch("/api/users"),
-  fetch("/api/orders"),
-  fetch("/api/analytics"),
-  fetch("/api/notifications"),
+const [res1, res2, res3] = await Promise.all([
+  fetch("/api/endpoint1"),
+  fetch("/api/endpoint2"),
+  fetch("/api/endpoint3"),
 ]);
-const users = await usersRes.json();
-const orders = await ordersRes.json();
-const analytics = await analyticsRes.json();
-const notifications = await notifsRes.json();
-// Total time = slowest request only (2 seconds)
+const data1 = await res1.json();
+const data2 = await res2.json();
+const data3 = await res3.json();
 
-Requirements:
-- Only use Promise.all when API calls are independent (no data depends on another)
-- Show a loading state while all requests are in flight
-- Handle errors - if any request fails, show an error state
-- Display a timer so users can see the performance improvement
-- Use "use client" at the top if using React state`
+Only use Promise.all when the API calls are independent - meaning no call needs data from another call before it can start.`
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(fixPrompt)
